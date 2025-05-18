@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Transactions</h2>
+    <form method="POST" action="/issue_book">
+        <div class="form-group">
+            <input type="date" name="issue_date" required 
+                   value="{{ datetime.now().strftime('%Y-%m-%d') }}">
+        </div>
+        <div class="form-group">
+            <select name="book_id" required>
+                <option value="">Select Book</option>
+                {% for book in books %}
+                <option value="{{ book[0] }}">{{ book[1] }} ({{ book[4] }} available)</option>
+                {% endfor %}
+            </select>
+        </div>
+        <div class="form-group">
+            <select name="member_id" required>
+                <option value="">Select Member</option>
+                {% for member in members %}
+                <option value="{{ member[0] }}">{{ member[1] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+        <button type="submit">Issue Book</button>
+    </form>
+
+    <h3>Active Transactions</h3>
+    <table>
+        <tr>
+            <th>Book</th>
+            <th>Member</th>
+            <th>Issue Date</th>
+            <th>Due Date</th>
+            <th>Return Date</th>
+            <th>Fine</th>
+            <th>Actions</th>
+        </tr>
+        {% for transaction in transactions %}
+        <tr>
+            <td>{{ transaction.book_name }}</td>
+            <td>{{ transaction.member_name }}</td>
+            <td>{{ transaction.issue_date|strftime('%Y-%m-%d') }}</td>
+            <td>{{ transaction.due_date|strftime('%Y-%m-%d') }}</td>
+            <td>
+                {% if transaction.return_date %}
+                    {{ transaction.return_date|strftime('%Y-%m-%d') }}
+                {% else %}
+                    Not Returned
+                {% endif %}
+            </td>
+            <td>
+                {% if transaction.fine > 0 %}
+                ₹{{ transaction.fine }}
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+            <td>
+                {% if not transaction.return_date %}
+                <a href="/return_book/{{ transaction.id }}" class="return-btn">Return</a>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+{% endblock %}

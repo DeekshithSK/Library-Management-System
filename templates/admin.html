@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    {% if not session.admin_authenticated %}
+    <h2>Admin Authentication</h2>
+    <form method="POST">
+        <div class="form-group">
+            <label>Admin Password</label>
+            <input type="password" name="password" required>
+            {% if error %}
+            <p style="color: var(--warning-color); margin-top: 5px;">{{ error }}</p>
+            {% endif %}
+        </div>
+        <button type="submit">Authenticate</button>
+    </form>
+    {% else %}
+    <div style="display: flex; justify-content: space-between; align-items: center">
+        <h2>Calculate Overdue Fine</h2>
+        <a href="{{ url_for('admin_logout') }}" class="btn-secondary" style="text-decoration: none; padding: 8px 15px;">
+            Logout
+        </a>
+    </div>
+    <form method="POST">
+        <div class="form-group">
+            <label>Number of Days Book Held</label>
+            <input type="number" name="days" min="0" required>
+        </div>
+        <button type="submit">Calculate Fine</button>
+    </form>
+
+    {% if calculated %}
+    <div class="result" style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 5px;">
+        <h3>Calculation Result</h3>
+        <p>Days held: {{ days }}</p>
+        <p>Fine amount:  ₹{{ fine }}</p>
+        <p style="color: #777; font-size: 0.9rem;">
+            * Fine calculation: ₹5 per week after 30 days
+        </p>
+    </div>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}

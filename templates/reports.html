@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+    <h2>Library Reports</h2>
+    
+    <div class="report-section">
+        <h3>Inventory Summary</h3>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th>ISBN</th>
+                    <th>Available Copies</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.id }}</td>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>{{ book.isbn }}</td>
+                    <td>{{ book.quantity }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <div class="report-section">
+        <h3>Statistics</h3>
+        <div class="stats">
+            <div class="stat-item">
+                <span class="stat-label">Total Fines Collected:</span>
+                <span class="stat-value">${{ "%.2f"|format(total_fines) }}</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-label">Books Currently Issued:</span>
+                <span class="stat-value">{{ books_issued }}</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
